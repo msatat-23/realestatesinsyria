@@ -1,0 +1,32 @@
+.button {
+  font-size: 16px;
+  text-align: center;
+  line-height: auto;
+  background-color: transparent;
+  border-radius: 3px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: ease 0.3s;
+}
+.profile {
+  color: #71b2de;
+  border: 1px #71b2de solid;
+}
+.profile:hover {
+  background-color: #71b2de;
+  color: #e5ecf3;
+}
+.signup {
+  color: #90001d;
+  border: 1px #90001d solid;
+}
+.signup:hover {
+  background-color: #90001d;
+  color: #e5ecf3;
+}
+@media (max-width: 1024px) {
+  .button {
+    font-size: 14px;
+    padding: 6px 10.5px;
+  }
+}

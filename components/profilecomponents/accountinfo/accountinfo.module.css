@@ -1,0 +1,219 @@
+.accountinfo {
+  width: 100%;
+  margin-top: 50px;
+  padding: 20px;
+  margin-bottom: 100px;
+  min-height: 100vh;
+}
+
+.accountform {
+  display: flex;
+  justify-content: center;
+  gap: 250px;
+  width: 100%;
+  align-items: center;
+  height: auto;
+  flex-wrap: wrap;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 30px;
+  margin-right: 0;
+}
+
+.input {
+  width: 250px;
+  max-width: 300px;
+  height: 50px;
+  outline: none;
+  border: 2px solid #252525;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: right;
+}
+
+.input:focus {
+  background-color: #d0d9e3;
+}
+
+.dir {
+  direction: ltr;
+  text-align: right;
+}
+
+.piccontainer {
+  align-self: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-content: center;
+  text-align: center;
+  gap: 20px;
+  margin-top: 40px;
+}
+
+.piccontainer p {
+  font-size: 16px;
+}
+
+.pic {
+  width: 120px;
+  height: 120px;
+  margin: auto;
+  cursor: pointer;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border-radius: 50%;
+  border: 3px solid #252525;
+}
+
+.createdatcontainer {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.datepic {
+  width: 24px;
+  height: 24px;
+}
+
+.datestart {
+  margin-top: 20px;
+  font-weight: bold;
+  color: #252525;
+  font-size: 16px;
+}
+
+.date {
+  font-size: 16px;
+}
+
+.bold {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.btn {
+  padding: 10px;
+  color: #d0d9e3;
+  background-color: #557b97;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 40px;
+  font-size: 16px;
+}
+
+.btn:hover {
+  background-color: #456883;
+}
+
+.btn:disabled {
+  background-color: #cccccc;
+  color: #999999;
+  cursor: not-allowed;
+}
+
+.error {
+  color: red;
+  max-width: 300px;
+  font-size: 14px;
+  margin-top: -25px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(17, 24, 39, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: #e5e7eb;
+  font-size: 18px;
+  font-family: Arial, sans-serif;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid #93c5fd;
+  border-top: 6px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@media (max-width: 768px) {
+  .accountform {
+    flex-direction: column;
+    gap: 50px;
+    align-items: center;
+  }
+
+  .input,
+  .error {
+    width: 90%;
+    max-width: 100%;
+  }
+
+  .form {
+    align-items: center;
+    margin: 0;
+  }
+
+  .piccontainer {
+    width: 100%;
+    align-items: center;
+  }
+
+  .pic {
+    width: 100px;
+    height: 100px;
+  }
+
+  .btn {
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .accountinfo {
+    padding: 10px;
+  }
+
+  .input,
+  .btn {
+    font-size: 14px;
+    height: 45px;
+  }
+
+  .error {
+    font-size: 13px;
+  }
+
+  .piccontainer p,
+  .bold,
+  .date,
+  .datestart {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,143 @@
+.img {
+  width: 164.7px;
+  height: 33.3px;
+}
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  gap: 40px;
+  font-size: 14px;
+}
+.navbar {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  margin: 0px auto;
+  padding: 18px 0px;
+  align-items: center;
+  width: calc(100% - 192px);
+  justify-content: space-between;
+  position: relative;
+}
+.a {
+  cursor: pointer;
+  color: #e5ecf3;
+  transition: ease 0.3s;
+  position: relative;
+}
+.a:hover {
+  color: #ccd8e6;
+}
+.a::before {
+  content: "";
+  position: absolute;
+  top: -15px;
+  bottom: -15px;
+  left: -25px;
+  right: -25px;
+  z-index: -1;
+}
+.newcolor {
+  color: #252525;
+}
+.newcolor:hover {
+  color: #7f8b9a;
+}
+.listBtn {
+  display: none;
+  cursor: pointer;
+}
+.noticon {
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+}
+.profileandnot {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  align-items: center;
+}
+@media (max-width: 1199px) {
+  .navbar {
+    width: calc(100% - 48px);
+  }
+}
+@media (min-width: 1025px) and (max-width: 1052px) {
+  .menu {
+    gap: 30px;
+    font-size: 13px;
+  }
+}
+@media (min-width: 768px) and (max-width: 1024px) {
+  .navbar {
+    width: calc(100% - 12px);
+  }
+  .menu {
+    gap: 16px;
+    font-size: 12px;
+  }
+  .img {
+    width: 115.29px;
+    height: 23.31px;
+  }
+}
+@media (max-width: 768px) {
+  .menu {
+    flex-direction: column;
+    gap: 40px;
+    font-size: 14px;
+    text-align: right;
+    align-items: center;
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    background-color: #ccd8e6;
+    width: 80%;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    padding: 0;
+    justify-content: center;
+    border-radius: 10px;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .img {
+    width: 115.29px;
+    height: 23.31px;
+  }
+
+  .listBtn {
+    display: inline;
+  }
+
+  .show {
+    max-height: 500px;
+    opacity: 1;
+    padding: 20px 0;
+    pointer-events: auto;
+  }
+
+  .newcolor1 {
+    color: #252525;
+  }
+
+  .newcolor1:hover {
+    color: #7f8b9a;
+  }
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 3;
+}

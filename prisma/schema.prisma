@@ -1,0 +1,304 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearchPostgres"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Governorate {
+  id        Int      @id @default(autoincrement())
+  name      String
+  cities    City[]
+  createdAt DateTime @default(now())
+}
+
+model City {
+  id            Int         @id @default(autoincrement())
+  name          String
+  regions       Region[]
+  governorate   Governorate @relation(fields: [governorateId], references: [id], onDelete: Cascade)
+  governorateId Int
+  createdAt     DateTime    @default(now())
+}
+
+model Region {
+  id         Int        @id @default(autoincrement())
+  name       String
+  properties Property[]
+  city       City       @relation(fields: [cityId], references: [id], onDelete: Cascade)
+  cityId     Int
+  createdAt  DateTime   @default(now())
+}
+
+enum Subscription {
+  FREE      @map("مجاني")
+  PREMIUM   @map("مميز")
+  EXCLUSIVE @map("حصري")
+}
+
+enum UserRole {
+  ADMIN @map("أدمن")
+  USER  @map("مستخدم_عادي")
+}
+
+model User {
+  id                    Int                    @id @default(autoincrement())
+  name                  String?
+  image                 String?
+  image_public_id       String?
+  firstName             String?
+  lastName              String?
+  username              String?
+  email                 String                 @unique
+  properties            Property[]
+  profileImage          String?
+  password              String?
+  role                  UserRole               @default(USER)
+  emailVerified         DateTime?
+  phone                 String?                @unique
+  subscription          Subscription           @default(FREE)
+  until                 DateTime?
+  hidePhone             Boolean                @default(false)
+  hideEmail             Boolean                @default(false)
+  hideFirstAndLast      Boolean                @default(false)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  isTwoFactorEnabled    Boolean                @default(false)
+  subscriptionrequests  SubscriptionRequest[]
+  notifications         Notification[]
+  savedProperties       SavedProperty[]
+  reviews               Review[]
+  complaints            Complaint[]
+  accounts              Account[]
+  twoFactorConfirmation TwoFactorConfirmation?
+}
+
+enum PropertyType {
+  APARTMENT        @map("شقة")
+  VILLA            @map("فيلا")
+  OFFICE           @map("مكتب")
+  SHOP             @map("محل_تجاري")
+  COMMERCIALOFFICE @map("مكتب_تجاري")
+  MALL             @map("مجمع_تجاري")
+  FACTORY          @map("مصنع")
+  WAREHOUSE        @map("مستودع")
+  EMPTYLAND        @map("أرض_فارغة")
+  AGRICULTURAL     @map("أرض_زراعية")
+  BUILDING         @map("عمارة")
+  CHALET           @map("شاليه")
+  STUDIO           @map("استوديو")
+  ARABICHOUSE      @map("بيت_عربي")
+  FARM             @map("مزرعة")
+  HOTEL            @map("فندق")
+  RESORT           @map("منتجع")
+  CLINIC           @map("عيادة")
+  EXHIBITION       @map("معرض")
+  PARKING          @map("موقف_سيارات")
+}
+
+enum Purpose {
+  SALE     @map("بيع")
+  RENT     @map("آجار")
+  MORTGAGE @map("رهن")
+}
+
+enum Direction {
+  EAST                  @map("شرقي")
+  WEST                  @map("غربي")
+  SOUTH                 @map("جنوبي")
+  NORTH                 @map("شمالي")
+  EAST_SOUTH            @map("شرقي_جنوبي")
+  EAST_NORTH            @map("شرقي_شمالي")
+  EAST_WEST             @map("شرقي_غربي")
+  SOUTH_WEST            @map("جنوبي_غربي")
+  SOUTH_NORTH           @map("جنوبي_شمالي")
+  WEST_NORTH            @map("غربي_شمالي")
+  EAST_SOUTH_WEST       @map("شرقي_جنوبي_غربي")
+  EAST_SOUTH_NORTH      @map("شرقي_جنوبي_شمالي")
+  SOUTH_WEST_NORTH      @map("جنوبي_غربي_شمالي")
+  WEST_EAST_NORTH       @map("غربي_شرقي_شمالي")
+  WEST_SOUTH_EAST_NORTH @map("غربي_جنوبي_شرقي_شمالي")
+}
+
+enum State {
+  ACCEPTED @map("مقبول")
+  REJECTED @map("مرفوض")
+  PENDING  @map("قيد_المراجعة")
+}
+
+enum Status {
+  NEEDSRENOVATION @map("بحاجة_إلى_إكساء")
+  NORMAL          @map("عادي")
+  SUPER           @map("سوبر")
+  SUPERDELUXE     @map("سوبر_ديلوكس")
+}
+
+model Property {
+  id              Int               @id @default(autoincrement())
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          Int
+  region          Region            @relation(fields: [regionId], references: [id])
+  regionId        Int
+  propertyType    PropertyType
+  purpose         Purpose
+  title           String
+  description     String
+  area            Int?
+  rooms           Int?
+  floor           String?
+  price           Int?
+  direction       Direction?
+  subscription    Subscription      @default(FREE)
+  contactInfo     String
+  state           State             @default(PENDING)
+  status          Status            @default(NORMAL)
+  video           String?           @unique
+  video_public_id String?           @unique
+  street          String?
+  views           Int               @default(0)
+  rating          Decimal           @default(0.0) @db.Decimal(3, 1)
+  numOfRaters     Int               @default(0)
+  completed       Boolean           @default(false)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  amenities       PropertyAmenity[]
+  images          Image[]
+  savedProperties SavedProperty[]
+  reviews         Review[]
+  complaints      Complaint[]
+}
+
+model Amenity {
+  id         Int               @id @default(autoincrement())
+  name       String
+  createdAt  DateTime          @default(now())
+  properties PropertyAmenity[]
+}
+
+model PropertyAmenity {
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId  Int
+  amenity     Amenity  @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+  amenityId   Int
+  description String
+
+  @@id([propertyId, amenityId])
+}
+
+model Image {
+  id         Int      @id @default(autoincrement())
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId Int
+  public_id  String   @unique
+  secure_url String   @unique
+  createdAt  DateTime @default(now())
+}
+
+model SubscriptionRequest {
+  id        Int          @id @default(autoincrement())
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  accepted  Boolean      @default(false)
+  subtype   Subscription
+  image     String
+  createdAt DateTime     @default(now())
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  data      String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model SavedProperty {
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+
+  @@id([propertyId, userId])
+}
+
+model Review {
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  rating     Decimal  @default(0.0) @db.Decimal(3, 1)
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  @@id([propertyId, userId])
+}
+
+enum compTypes {
+  COMPLAINT @map("شكوى")
+  INQUIRY   @map("استفسار")
+}
+
+model Complaint {
+  id            Int       @id @default(autoincrement())
+  property      Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId    Int
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        Int
+  description   String
+  complaintType compTypes @default(INQUIRY)
+  createdAt     DateTime  @default(now())
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            Int     @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model VerificationToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([email, token])
+}
+
+model TwoFactorToken {
+  id      Int      @id @default(autoincrement())
+  email   String
+  code    String
+  expires DateTime
+
+  @@unique([email, code])
+}
+
+model TwoFactorConfirmation {
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

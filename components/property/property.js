@@ -1,0 +1,121 @@
+"use client"
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import classes from './property.module.css';
+import { Readex_Pro } from 'next/font/google';
+import Card from '../UI/card';
+import { setActive } from '@/store/notifySlice';
+import { useDispatch } from 'react-redux';
+const Readex_Pro_Font = Readex_Pro({
+    subsets: ['arabic'],
+    weight: '400'
+});
+const translationMap = {
+    "SALE": "بيع",
+    "RENT": "إيجار",
+    "FREE": "مجاني",
+    "PREMIUM": "مميز",
+    "EXCLUSIVE": "حصري",
+};
+
+const Property = (props) => {
+    const router = useRouter();
+    const dispatch = useDispatch();
+    const [Loading, setLoading] = useState(false);
+    const viewPropertyDetails = () => {
+        if (Loading) return;
+        router.push(`/property/${props.id}`);
+    }
+    const formattedDate = props.createdAt
+        ? new Date(props.createdAt).toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        }).replace(/\//g, "-")
+        : "بدون تاريخ";
+
+    const addTofavHandler = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`http://localhost:8000/api/property/${props.id}/favorite`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await res.json();
+            console.log(data);
+            if (res.ok) {
+                dispatch(setActive('addtofav'));
+            }
+        }
+        catch {
+            console.log('خطأ في الاضافة الى المفضلة');
+            dispatch(setActive('failedtofav'));
+        }
+    };
+    const image = async () => {
+        setLoading(true);
+        try {
+            const image = await fetch(`http://localhost:3000/api/property/firstimage/${props.id}`);
+            const data = await image.json();
+            console.log(data);
+        }
+        catch (e) {
+            console.log(e);
+        } finally {
+            setLoading(false);
+        }
+    }
+    useEffect(() => {
+        // image();
+    }, []);
+    return (<Card>
+        <div className={`${classes.property} ${Readex_Pro_Font.className}`} onClick={viewPropertyDetails}>
+            <img className={classes.img} src={props.url} alt="propertypic" />
+            <div className={classes.propdata}>
+                <div className={classes.section}>
+                    <div className={classes.desc}><p>{props.title}</p></div>
+                    <div className={classes.desc}>{translationMap[props.purpose]}</div>
+                </div>
+                <div className={classes.section}>
+                    <div className={classes.first}>
+                        <div className={classes.icon}><img src='/assets/icons/propertyprice/price.png' /></div>
+                        <div className={classes.desc}>${props.price}</div>
+                    </div>
+                    <div className={classes.desc}>{props.area}m</div>
+                </div>
+                <div className={classes.section}>
+                    <div className={classes.first}>
+                        <div className={classes.icon}><img src='/assets/icons/location/map.png' /></div>
+                        <div className={classes.desc}>{props.region.city.name} , {props.region.name}</div>
+                    </div>
+                    <div className={classes.couple}>
+                        <p className={classes.smallp}>إضافة إلى المفضلة</p>
+                        <button type="button" className={`${classes.addicon} ${classes.tooltip}`} onClick={(e) => {
+                            e.stopPropagation();
+                            addTofavHandler();
+                        }}>
+                            <img className={classes.addimg} src="/assets/icons/addtofav/add-button.png" />
+                            <span className={classes.tooltiptext}>إضافة إلى المفضلة</span>
+                        </button>
+                    </div>
+                </div>
+                <div className={classes.section}>
+                    <div className={classes.first}>
+                        <div className={classes.icon}><img src='/assets/icons/date/calendar.png' /></div>
+                        <div className={classes.desc}>{formattedDate}</div>
+                    </div>
+                    <div className={translationMap[props.subscription] == 'مميز' ? classes.specialproperty : translationMap[props.subscription] == 'حصري' ? classes.exclusiveproperty : ''}>{translationMap[props.subscription] != 'مجاني' && translationMap[props.subscription]}</div>
+                </div>
+            </div>
+            {Loading && <div className={classes.overlay}>
+                <div className={classes.spinner}></div>
+                <p>جار التحميل...</p>
+            </div>}
+        </div></Card>
+    )
+}
+
+export default Property;

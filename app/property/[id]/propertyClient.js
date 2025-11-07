@@ -37,9 +37,7 @@ const PropertyClient = async ({ id }) => {
             <Navbar mainpage={false} />
             <div className={classes.imagesanddescription}>
                 <TitleAndDescription id={id} />
-                <Suspense fallback={<Loading />}>
-                    <ImagesContainer id={id} />
-                </Suspense>
+                <ImagesContainer id={id} />
             </div>
             <div className={classes.specifications}>
                 <Specifications id={id} />

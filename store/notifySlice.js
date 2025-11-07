@@ -19,4 +19,4 @@ const notifySlice = createSlice({
     }
 });
 export const { setActive, reset } = notifySlice.actions;
-export default notifySlice;
+export default notifySlice.reducer;

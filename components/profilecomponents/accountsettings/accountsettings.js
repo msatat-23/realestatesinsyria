@@ -10,6 +10,7 @@ import { updatePassword, updatePrivacy } from '@/app/profile/update-user';
 import { passwordValidation } from '@/lib/validation/uservalidators';
 import { fetchprivacy } from '@/app/profile/get-user-data';
 import { Logout } from '@/serverrequests/logout';
+import { signOut } from 'next-auth/react';
 const AccountSettings = ({ onLogout }) => {
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const [currentPassword, setCurrentPassword] = useState("");
@@ -102,18 +103,32 @@ const AccountSettings = ({ onLogout }) => {
     };
 
     const handleLogout = async () => {
-
-        setLoading(true);
-        const res = await Logout();
-        if (res.ok) {
-            console.log("تم تسجيل الخروج");
+        try {
+            setLoading(true);
+            await signOut({ redirect: false });
             dispatch(resetinfo());
             router.replace('/login');
+            return { ok: true, message: "تم تسجيل الخروج بنجاح!" };
+        } catch (e) {
+            console.log("فشل", e);
+            return { ok: false, message: "فشل تسجيل الخروج" };
         }
-        else {
-            console.log("HUGE FAILURE!!");
+        finally {
+            setLoading(false);
         }
-        setLoading(false);
+        // try {
+
+        //     const res = await Logout();
+        //     if (res.ok) {
+        //         console.log("تم تسجيل الخروج");
+        //         dispatch(resetinfo());
+        //     }
+        // } catch (e) {
+        //     console.log("HUGE FAILURE!!");
+        // }
+        // finally {
+        //     setLoading(false);
+        // }
     };
     useEffect(() => {
         const fetchprivacysettings = async () => {

@@ -105,7 +105,7 @@ export const useLogInForm = ({ onSuccess } = {}) => {
             dispatch({ type: "SET_SUCCESS", value: "تم تسجيل الدخول بنجاح ✔️" });
 
             if (onSuccess) onSuccess(res.data);
-
+            window.location.href = '/';
             return res;
         } catch (err) {
 

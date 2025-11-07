@@ -5,6 +5,7 @@ import prisma from "./lib/prisma";
 import authConfig from "./auth.config";
 import { getTwoFactorConfirmationByUserId } from "./data/user/twofactor-confirmation";
 export const { handlers, signIn, signOut, auth } = NextAuth({
+    trustHost: true,
     callbacks: {
         async jwt({ token, user }) {
             if (!token.sub) return token;

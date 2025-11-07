@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import classes from './property.module.css';
 import { Readex_Pro } from 'next/font/google';
 import Card from '../UI/card';
-import { setActive } from '@/store/notifySlice';
-import { useDispatch } from 'react-redux';
 import { getFirstImageSecureUrl } from '@/app/addproperty/[id]/get-data';
 const Readex_Pro_Font = Readex_Pro({
     subsets: ['arabic'],
@@ -21,7 +19,6 @@ const translationMap = {
 
 const Property = (props) => {
     const router = useRouter();
-    const dispatch = useDispatch();
     const [image, setImage] = useState(null);
     const [Loading, setLoading] = useState(false);
     const viewPropertyDetails = () => {
@@ -36,27 +33,27 @@ const Property = (props) => {
         }).replace(/\//g, "-")
         : "بدون تاريخ";
 
-    const addTofavHandler = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:8000/api/property/${props.id}/favorite`, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            const data = await res.json();
-            console.log(data);
-            if (res.ok) {
-                dispatch(setActive('addtofav'));
-            }
-        }
-        catch {
-            console.log('خطأ في الاضافة الى المفضلة');
-            dispatch(setActive('failedtofav'));
-        }
-    };
+    // const addTofavHandler = async () => {
+    //     try {
+    //         const token = localStorage.getItem('token');
+    //         const res = await fetch(`http://localhost:8000/api/property/${props.id}/favorite`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Accept': 'application/json',
+    //                 'Authorization': `Bearer ${token}`
+    //             }
+    //         });
+    //         const data = await res.json();
+    //         console.log(data);
+    //         if (res.ok) {
+    //             dispatch(setActive('addtofav'));
+    //         }
+    //     }
+    //     catch {
+    //         console.log('خطأ في الاضافة الى المفضلة');
+    //         dispatch(setActive('failedtofav'));
+    //     }
+    // };
     const optimizeCloudinary = (url) => {
         return url.replace("/upload/", "/upload/f_auto,q_auto,w_900/");
     };

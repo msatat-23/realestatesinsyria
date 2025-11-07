@@ -15,4 +15,4 @@ const loggedInSlice = createSlice({
     }
 })
 export const { setLoggedIn, logout } = loggedInSlice.actions;
-export default loggedInSlice;
+export default loggedInSlice.reducer;

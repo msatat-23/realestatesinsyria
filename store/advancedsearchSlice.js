@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    q:'',
+    q: '',
     min_price: '',
     max_price: '',
     governorate: '',
@@ -31,4 +31,4 @@ const advancedSearchSlice = createSlice({
 });
 
 export const { updateField, resetfields } = advancedSearchSlice.actions;
-export default advancedSearchSlice;
+export default advancedSearchSlice.reducer;

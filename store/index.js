@@ -6,11 +6,11 @@ import advancedSearchSlice from "./advancedsearchSlice";
 import notifySlice from "./notifySlice";
 const store = configureStore({
     reducer: {
-        mainproperties: mainpagepropertiesSlice.reducer,
-        loggedin: loggedInSlice.reducer,
-        user: userSlice.reducer,
-        advancedsearch: advancedSearchSlice.reducer,
-        notify: notifySlice.reducer
+        mainproperties: mainpagepropertiesSlice,
+        loggedin: loggedInSlice,
+        user: userSlice,
+        advancedsearch: advancedSearchSlice,
+        notify: notifySlice
     }
 });
 

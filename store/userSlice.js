@@ -29,10 +29,12 @@ const userSlice = createSlice({
         setinfo(state, action) {
             return { ...state, ...action.payload };
         },
-        resetinfo() {
-            return { ...initialState };
+        resetinfo(state) {
+            Object.keys(state).forEach(key => {
+                state[key] = initialState[key];
+            });
         }
     }
 });
 export const { setinfo, resetinfo } = userSlice.actions;
-export default userSlice;
+export default userSlice.reducer;

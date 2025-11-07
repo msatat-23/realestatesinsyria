@@ -33,7 +33,14 @@ export async function POST(request) {
         });
         console.log(response);
         const verificationToken = await generateVerificationToken(body.email);
-        await sendVerificationEmail(verificationToken.email, verificationToken.token);
+        const { Resend } = await import("resend");
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        await resend.emails.send({
+            from: "Acme <onboarding@resend.dev>",
+            to: body.email,
+            subject: "Confirm Your Email",
+            html: `<p>Click <a href="http://localhost:3000/new-verification?token=${verificationToken.token}">here</a> to confirm email</p>`
+        });
         return new Response(JSON.stringify(response), {
             headers: { "Content-Type": "application/json" },
             status: 201

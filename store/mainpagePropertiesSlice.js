@@ -15,4 +15,4 @@ const mainpagePropertiesSlice = createSlice({
     }
 })
 export const { setProperties } = mainpagePropertiesSlice.actions;
-export default mainpagePropertiesSlice;
+export default mainpagePropertiesSlice.reducer;

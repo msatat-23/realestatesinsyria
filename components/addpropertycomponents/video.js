@@ -140,19 +140,11 @@ const Video = (props) => {
         {video?.preview && <div className="relative p-0">
             <img src="/assets/icons/exit/no.png" className="w-16 h-16 absolute top-0 right-[10%] translate-x-[50%] translate-y-[-50%] z-10 cursor-pointer" onClick={() => { deleteVid() }} />
             <VideoPlayer
-                sources={
-                    {
-                        type: 'video',
-                        sources: [
-                            {
-                                src: video.preview,
-                                type: 'video/mp4'
-                            }
-                        ]
-                    }
-                }
+                url={video.preview}
                 options={{
-                    controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+                    playing: false,
+                    loop: false,
+                    muted: false
                 }} />
         </div>}
 

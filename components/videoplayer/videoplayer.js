@@ -1,16 +1,20 @@
 'use client'
-import dynamic from 'next/dynamic';
-import 'plyr-react/plyr.css';
 import classes from './videoplayer.module.css';
+import ReactPlayer from 'react-player';
 
-const Plyr = dynamic(() => import('plyr-react'), { ssr: false });
 
-const VideoPlayer = ({ sources, options }) => {
-    if (!sources?.sources?.length) return null;
+const VideoPlayer = ({ url, options }) => {
+    if (!url) return null;
 
     return (
         <div className={classes.customVideoWrapper}>
-            <Plyr source={sources} options={options} />
+            <ReactPlayer
+                url={url}
+                controls={true}
+                width='100%'
+                height='100%'
+                {...options}
+            />
         </div>
     );
 };

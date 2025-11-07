@@ -8,7 +8,7 @@ import { setinfo } from '@/store/userSlice';
 import { updateImage, updateUserByUserId } from '@/app/profile/update-user';
 import { fetchUserImage } from '@/app/profile/get-user-data';
 import { signOut } from 'next-auth/react';
-impor
+
 const AccountInfo = ({ firstname, lastname, username, phonenum, createdat, sub_type, image }) => {
     const [first, setFirst] = useState('');
     const [last, setLast] = useState('');

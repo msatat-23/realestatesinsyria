@@ -27,5 +27,6 @@ export const updateHomeFeed = async () => {
     }
 };
 export function startHomeFeedScheduler() {
+    updateHomeFeed();
     cron.schedule("0 */2 * * *", updateHomeFeed);
 }

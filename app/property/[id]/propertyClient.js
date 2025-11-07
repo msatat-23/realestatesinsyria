@@ -27,7 +27,7 @@ const PropertyClient = async ({ id }) => {
     if (!property) {
         return (
             <div className={classes.notfound}>
-                <h2>⚠️ العقار غير موجود</h2>
+                <h2>العقار غير موجود</h2>
                 <p>ربما تم حذفه أو أن الرقم غير صحيح.</p>
             </div>
         );

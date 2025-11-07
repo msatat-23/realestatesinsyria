@@ -8,6 +8,7 @@ import Mainpageproperties from "@/components/property/mainpageproperties";
 import Bigbutton from "@/components/bigbutton/bigbutton";
 import Footer from "@/components/footer/footer";
 import { getHomeFeed } from '@/lib/home-feed';
+import prisma from '@/lib/prisma';
 const Readex_Pro_Font = Readex_Pro(
   {
     subsets: ['arabic'],
@@ -17,8 +18,46 @@ const Readex_Pro_Font = Readex_Pro(
 
 
 export default async function Home() {
-  // const { exclusive, special } = await getHomeFeed();
-  // console.log(exclusive, special);
+  const exclusive = await prisma.property.findMany({
+    where: { subscription: "EXCLUSIVE" },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: 12,
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      purpose: true,
+      state: true,
+      propertyType: true,
+      price: true,
+      area: true,
+      region: { select: { city: { select: { name: true } }, name: true } },
+      subscription: true,
+      createdAt: true
+    },
+  });
+  const special = await prisma.property.findMany({
+    where: { subscription: "PREMIUM" },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: 12,
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      purpose: true,
+      state: true,
+      propertyType: true,
+      price: true,
+      area: true,
+      region: { select: { city: { select: { name: true } }, name: true } },
+      subscription: true,
+      createdAt: true
+    },
+  });
 
   return (
     <Fragment>
@@ -26,7 +65,7 @@ export default async function Home() {
       <div className={`${classes.background} ${Readex_Pro_Font.className}`}>
         <Navbar mainpage={true} />
         <Search />
-        {/* <Mainpageproperties    /> */}
+        <Mainpageproperties properties={{ exclusive, special }} />
         <Bigbutton buttontext='إظهار المزيد من العقارات المميزة' />
         <Subdesc />
         <Footer />

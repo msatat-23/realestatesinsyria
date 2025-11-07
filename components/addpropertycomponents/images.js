@@ -123,19 +123,13 @@ const Images = (props) => {
                     method: 'POST',
                     body: fd,
                 });
-
-                if (!res.ok) {
-                    const err = await res.json().catch(() => null);
-                    throw new Error(err?.error || 'فشل رفع الصورة');
-                }
-
                 const data = await res.json();
                 console.log(data);
                 uploadedImages.push(data);
 
                 setProgress(Math.round(((i + 1) / imagesToUpload.length) * 100));
-            } catch (err) {
-                console.error('Upload error:', err);
+            } catch (e) {
+                console.log('فشل رفعه احدى الصور', e);
                 setError('فشل رفع إحدى الصور.');
                 break;
             }

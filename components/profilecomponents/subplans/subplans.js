@@ -64,7 +64,7 @@ export default function SubscriptionPlans() {
                             </p>
                             <ul className={classes.features}>
                                 {plan.features.map((feature, idx) => (
-                                    <li key={idx}>✅ {feature}</li>
+                                    <li key={idx}> {feature}</li>
                                 ))}
                             </ul>
                         </div>

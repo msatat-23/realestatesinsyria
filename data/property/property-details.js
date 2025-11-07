@@ -31,13 +31,14 @@ export const getUserPropertiesByUserId = async (userId) => {
     }
 };
 export const getPropertyFirstImage = async (propertyId) => {
-    const image = prisma.image.findFirst({
+    const image = await prisma.image.findFirst({
         where: { propertyId: parseInt(propertyId) }
     });
     return image;
 };
 export const getPropertyImages = async (propertyId) => {
-    const images = prisma.image.findMany({
+    console.log(propertyId)
+    const images = await prisma.image.findMany({
         where: { propertyId: parseInt(propertyId) },
         select: { secure_url: true }
     });

@@ -6,6 +6,7 @@ import { Readex_Pro } from 'next/font/google';
 import Card from '../UI/card';
 import { setActive } from '@/store/notifySlice';
 import { useDispatch } from 'react-redux';
+import { getFirstImageSecureUrl } from '@/app/addproperty/[id]/get-data';
 const Readex_Pro_Font = Readex_Pro({
     subsets: ['arabic'],
     weight: '400'
@@ -21,6 +22,7 @@ const translationMap = {
 const Property = (props) => {
     const router = useRouter();
     const dispatch = useDispatch();
+    const [image, setImage] = useState(null);
     const [Loading, setLoading] = useState(false);
     const viewPropertyDetails = () => {
         if (Loading) return;
@@ -55,25 +57,29 @@ const Property = (props) => {
             dispatch(setActive('failedtofav'));
         }
     };
-    const image = async () => {
-        setLoading(true);
-        try {
-            const image = await fetch(`http://localhost:3000/api/property/firstimage/${props.id}`);
-            const data = await image.json();
-            console.log(data);
-        }
-        catch (e) {
-            console.log(e);
-        } finally {
-            setLoading(false);
-        }
-    }
+    const optimizeCloudinary = (url) => {
+        return url.replace("/upload/", "/upload/f_auto,q_auto,w_900/");
+    };
+
     useEffect(() => {
-        // image();
+        const fetchimage = async (id) => {
+            try {
+                const image = await getFirstImageSecureUrl(id);
+                console.log(image);
+
+                setImage(optimizeCloudinary(image.secure_url));
+            } catch (e) {
+                console.log('فشل في جلب الصور ', e);
+            }
+        };
+        if (props.id) {
+            fetchimage(props.id);
+            console.log(props.id);
+        }
     }, []);
     return (<Card>
         <div className={`${classes.property} ${Readex_Pro_Font.className}`} onClick={viewPropertyDetails}>
-            <img className={classes.img} src={props.url} alt="propertypic" />
+            <img className={classes.img} src={image ? image : '/assets/pics/propertydumpic/ChatGPT Image Apr 28, 2025, 04_25_50 PM.png'} alt="propertypic" />
             <div className={classes.propdata}>
                 <div className={classes.section}>
                     <div className={classes.desc}><p>{props.title}</p></div>

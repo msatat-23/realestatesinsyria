@@ -241,7 +241,7 @@ const SearchFilter = () => {
             dispatch(updateField({ field: 'region', value: '' }));
             setRegions([]);
         }
-    }, [reduxfilters.governorate])
+    }, [reduxfilters.governorate]);
     useEffect(() => {
         if (reduxfilters.city) {
             const fetchregions = async () => {
@@ -263,7 +263,7 @@ const SearchFilter = () => {
             dispatch(updateField({ field: 'region', value: '' }));
             setRegions([]);
         }
-    }, [reduxfilters.city])
+    }, [reduxfilters.city]);
     return (
         <div className={classes.searchfilter}>
             {(SelectedFilter !== '') && < div className={classes.overlay} onClick={() => { setSelectedFilter(''); }}></div>}

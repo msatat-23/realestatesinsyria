@@ -1,81 +1,57 @@
 'use client';
-
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import './notifications.css';
+import { fetchAllNotifications, markAllRead, markRead } from './notification-actions';
 
-export default function NotificationSidebar({ close }) {
+export default function NotificatioSidebar({ close }) {
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(false);
 
-
-
     const fetchNotifications = async () => {
-        const token = localStorage.getItem('token');
-        if (!token) return;
-
-        setLoading(true);
         try {
-            const res = await fetch('http://localhost:8000/api/notifications', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-            });
-            const data = await res.json();
-            setNotifications(data);
-            if (res.ok) {
-                console.log('نجاح جلب الاشعارات')
-            }
-
-        } catch (err) {
-            console.log(err);
-            console.log('فشل جلب التعليقات');
-        } finally {
+            setLoading(true);
+            const res = await fetchAllNotifications();
+            console.log(res);
+            setNotifications(res.data);
+        }
+        catch (e) {
+            console.log("فشل جلب الإشعارات:", e);
+        }
+        finally {
+            setLoading(false);
+        }
+    };
+    const markAsRead = async (id) => {
+        try {
+            setLoading(true);
+            const res = await markRead(id);
+            setNotifications(
+                notifications.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+            );
+            console.log(res);
+        } catch (e) {
+            console.log('فشل تعليم الإشعار كمقروء:', e);
+        }
+        finally {
+            setLoading(false);
+        }
+    };
+    const markAllAsRead = async () => {
+        try {
+            setLoading(true);
+            const res = await markAllRead();
+            setNotifications(
+                notifications.map((n) => ({ ...n, isRead: true })));
+            console.log(res);
+        } catch (e) {
+            console.log('فشل تعليم الإشعارات كمقروء:', e);
+        }
+        finally {
             setLoading(false);
         }
     };
 
-    const markAsRead = async (id) => {
-        const token = getAuthToken();
-        if (!token) return;
-
-        try {
-            await fetch(`/api/notifications/${id}/read`, {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            setNotifications(
-                notifications.map((n) => (n.id === id ? { ...n, is_read: true } : n))
-            );
-        } catch (err) {
-            console.error('فشل تعليم الإشعار كمقروء:', err);
-        }
-    };
-
-    const markAllAsRead = async () => {
-        const token = localStorage.getItem('token');
-        if (!token) return;
-
-        try {
-            await fetch('http://localhost:8000/api/notifications/read-all', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json'
-                    , 'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-            });
-
-            setNotifications(notifications.map((n) => ({ ...n, is_read: true })));
-        } catch (err) {
-            console.log('فشل تعليم الكل كمقروء:', err);
-        }
-    };
-
-    const unreadCount = notifications.filter((n) => !n.is_read).length;
+    const unreadCount = notifications.filter((n) => !n.isRead).length;
 
 
     useEffect(() => {
@@ -85,7 +61,7 @@ export default function NotificationSidebar({ close }) {
     }, []);
 
     return (
-        <>
+        <Fragment>
 
             <div
                 className="notification-overlay"
@@ -124,7 +100,7 @@ export default function NotificationSidebar({ close }) {
                         notifications.map((n) => (
                             <div
                                 key={n.id}
-                                className={`notification-item ${!n.is_read ? 'notification-unread' : ''}`}
+                                className={`notification-item ${!n.isRead ? 'notification-unread' : ''}`}
                             >
                                 <div className="notification-title">{n.data.title}</div>
                                 <div className="notification-message">
@@ -140,7 +116,7 @@ export default function NotificationSidebar({ close }) {
                                             year: 'numeric'
                                         })}
                                     </span>
-                                    {!n.is_read && (
+                                    {!n.isRead && (
                                         <button
                                             onClick={() => markAsRead(n.id)}
                                             className="notification-read-btn"
@@ -154,6 +130,6 @@ export default function NotificationSidebar({ close }) {
                     )}
                 </div>
             </div>
-        </>
+        </Fragment>
     );
 }

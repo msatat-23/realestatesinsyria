@@ -1,23 +1,56 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { sendImageToDB } from "../addproperty/[id]/send-data";
 
 const Client = () => {
     const [image, setimage] = useState(null);
+    const [preview, setPreview] = useState(null);
     const [propertyId, setPropertyId] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [uploaded, setUploaded] = useState(false);
 
+    useEffect(() => {
+        if (!image) {
+            setPreview(null);
+            return;
+        }
+        const url = URL.createObjectURL(image);
+        setPreview(url);
+
+        return () => {
+            URL.revokeObjectURL(url);
+        };
+    }, [image]);
     const upload = async () => {
-        if (!image) return;
+        if (!image) {
+            alert('لايوجد صورة!');
+            return;
+        }
+        if (!propertyId) {
+            alert('رقم العقار مفقود!');
+            return;
+        }
         const fd = new FormData();
         fd.append("file", image);
         fd.append("propertyId", propertyId);
         setLoading(true);
-        const res = await fetch("/api/property/upload-images", {
-            method: "POST",
-            body: fd,
-        });
-        setLoading(false);
-        console.log(res);
+        try {
+            const res = await fetch("/api/property/upload-images", {
+                method: "POST",
+                body: fd,
+            });
+            const data = await res.json();
+            console.log(data);
+            const response = await sendImageToDB(data.url, data.public_id, propertyId);
+            console.log(response);
+            setUploaded(true);
+        }
+        catch (e) {
+            console.log("خطأ في رفع الصورة!", e);
+        }
+        finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -27,7 +60,10 @@ const Client = () => {
                     id="imageupload"
                     type="file"
                     accept="image/*"
-                    onChange={(e) => setimage(e.target.files[0])}
+                    onChange={(e) => {
+                        setUploaded(false);
+                        setimage(e.target.files[0]);
+                    }}
                     className="hidden"
                 />
                 <label
@@ -40,7 +76,10 @@ const Client = () => {
                 <input
                     type="number"
                     value={propertyId || ""}
-                    onChange={(e) => setPropertyId(e.target.value)}
+                    onChange={(e) => {
+                        setUploaded(false);
+                        setPropertyId(e.target.value);
+                    }}
                     placeholder="property id"
                     className="border-[3px] outline-0 w-[300px] h-[45px] rounded-2xl p-2 placeholder:ltr"
                     dir="ltr"
@@ -50,14 +89,16 @@ const Client = () => {
             {image && (
                 <img
                     className="w-[300px] mt-[100px] rounded-2xl shadow-md border"
-                    src={URL.createObjectURL(image)}
+                    src={preview}
                     alt="preview"
                 />
             )}
 
             <button
                 onClick={upload}
-                className="mt-[30px] py-4 px-8 rounded-2xl text-white text-[18px] bg-sky-700 hover:bg-sky-900 hover:cursor-pointer"
+                className={`mt-[30px] py-4 px-8 rounded-2xl text-white text-[18px] 
+                ${loading || uploaded ? 'bg-gray-500 cursor-not-allowed' : 'bg-sky-700 cursor-pointer hover:bg-sky-900'}`}
+                disabled={loading || uploaded}
             >
                 ارفع الصورة
             </button>

@@ -22,14 +22,7 @@ export const deleteVideoFromDB = async (id) => {
     return res;
 };
 
-export const fetchSavedProperties = async (userId) => {
-    console.log("IAM IN SERVER TRYING TO FETCH SAVEDPROPRETIES BY USER ID!!!");
-    const res = await fetchSavedPropertiesByUserId(userId);
-    return res;
-};
-
 export const deleteSavedPropertyForUser = async (userId, propertyId) => {
     const res = deleteSavedProperty(userId, propertyId);
     return res;
-
 };

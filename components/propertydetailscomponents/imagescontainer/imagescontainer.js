@@ -9,16 +9,29 @@ const ImagesContainer = ({ id }) => {
     const [photoIndex, setphotoIndex] = useState(0);
     const [images, setImages] = useState([]);
 
+    const optimizeCloudinary = (url) => {
+        return url.replace("/upload/", "/upload/f_auto,q_auto,w_900/");
+    };
+
     useEffect(() => {
         const fetchimages = async (id) => {
-            const images = await getImagesSecureUrl(id);
-            setImages(images);
+            try {
+                const images = await getImagesSecureUrl(id);
+                console.log(images);
+                const formatted = images.map(item => optimizeCloudinary(item.secure_url));
+                setImages(formatted);
+            } catch (e) {
+                console.log('فشل في جلب الصور ', e);
+            }
         };
         if (id) {
-            fetchimages();
+            fetchimages(id);
+            console.log(id);
         }
     }, []);
-
+    useEffect(() => {
+        console.log(images);
+    }, [images]);
 
     const remainingCount = images.length - 3;
 

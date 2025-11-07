@@ -14,11 +14,24 @@ import ContactInfo from '@/components/propertydetailscomponents/contactinfo/cont
 import SimilarProperties from '@/components/propertydetailscomponents/similarproperties/similarproperties';
 import Footer from '@/components/footer/footer';
 import Loading from '@/components/loadingwithoutoverlay/loading';
+import prisma from '@/lib/prisma';
 const Readex_Pro_Font = Readex_Pro({ subsets: ['arabic'], weight: '400' });
 
 
 
-const PropertyClient = ({ id }) => {
+const PropertyClient = async ({ id }) => {
+    const property = await prisma.property.findUnique({
+        where: { id: parseInt(id) },
+        select: { id: true }
+    });
+    if (!property) {
+        return (
+            <div className={classes.notfound}>
+                <h2>⚠️ العقار غير موجود</h2>
+                <p>ربما تم حذفه أو أن الرقم غير صحيح.</p>
+            </div>
+        );
+    }
     return (
         <div className={`${classes.global} ${Readex_Pro_Font.className}`}>
             <Navbar mainpage={false} />
@@ -35,7 +48,7 @@ const PropertyClient = ({ id }) => {
             <PropertyAmenities id={id} />
             <PropertyVideo id={id} />
             <Statistics id={id} />
-            <CommentsSection id={id} />
+            {/* <CommentsSection id={id} /> */}
             <ContactInfo id={id} />
             <SimilarProperties id={id} />
             <Footer />

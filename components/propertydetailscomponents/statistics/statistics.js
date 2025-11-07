@@ -1,8 +1,17 @@
-import { useEffect } from 'react';
 import classes from './statistics.module.css';
-
-const Statistics = ({ views, rating, numofraters, created_at }) => {
-    const formmatedDate = created_at ? new Date(created_at).toLocaleDateString('en-GB',
+import prisma from '@/lib/prisma';
+const Statistics = async ({ id }) => {
+    const info = await prisma.property.findUnique({
+        where: { id: parseInt(id) },
+        select: {
+            views: true,
+            rating: true,
+            numOfRaters: true,
+            createdAt: true
+        }
+    });
+    const rating = info.rating?.toNumber?.() ?? 0;
+    const formmatedDate = info.createdAt ? new Date(info.createdAt).toLocaleDateString('en-GB',
         {
             day: '2-digit',
             month: '2-digit',
@@ -41,9 +50,9 @@ const Statistics = ({ views, rating, numofraters, created_at }) => {
             </thead>
             <tbody>
                 <tr>
-                    <td data-label="عدد المشاهدات">{views}</td>
+                    <td data-label="عدد المشاهدات">{info.views}</td>
                     <td data-label="تقييم العقار">{rating}</td>
-                    <td data-label="عدد المقيمين">{numofraters}</td>
+                    <td data-label="عدد المقيمين">{info.numOfRaters}</td>
                     <td data-label="تاريخ النشر">{formmatedDate}</td>
                 </tr>
             </tbody>

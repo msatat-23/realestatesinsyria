@@ -1,6 +1,14 @@
 .global {
 }
-
+.notfound {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(84, 145, 148);
+  font-size: 18px;
+  color: #252525;
+}
 .imagesanddescription {
   margin: 20px auto 40px auto;
   width: calc(100% - 192px);

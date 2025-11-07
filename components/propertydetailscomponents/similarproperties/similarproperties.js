@@ -1,100 +1,42 @@
 import classes from './similarproperties.module.css';
 import Property from '@/components/property/property';
+import prisma from '@/lib/prisma';
 import { Fragment } from 'react';
-const DUMMY_PROPERTIES = [{
-    id: '1',
-    title: 'شقة سوبر ديلوكس',
-    description: `شقة فاخرة للبيع في كورنيش الإذاعة
-- المساحة: 200 متر مربع
-- عدد الغرف: 5 غرف واسعة
-- الطابق: الثاني، بإطلالة رائعة على الكورنيش
-- التشطيب: ديكور كامل بتصميم عصري وأنيق
-- المرافق: طاقة شمسية للمياه والكهرباء لضمان الاستدامة
-- السعر: مغري ومناسب للمواصفات`,
-    governorate: 'حلب',
-    city: "حلب",
-    region: "الإذاعة",
-    status: 'بيع',
-    price: '100000',
-    area: '200',
-    roomsNumber: '5',
-    floor: '2',
-    directions: 'غربي-قبلي',
-    contact_info: '+963940401235',
-    date: '01/01/2025',
-    is_sub: true
-    , sub_type: 'حصري',
-    rating: '4.3'
-},
-{
-    id: '2',
-    title: 'شقة بإطلالة رائعة وسعر مغري ',
-    description: `شقة بإطلالة رائعة وسعر مغري في الأعظمية – حلب
-- المساحة: 150 متر مربع
-- عدد الغرف: 5 غرف واسعة ومريحة
-- الطابق: الثالث، بإطلالة شرقية-قبلية
-- التشطيب: ديكور فاخر وعصري
-- المرافق: طاقة شمسية للمياه والكهرباء
-- السعر: 60,000 دولار
-- الموقع: الأعظمية، مدينة حلب
-- حالة العقار: للبيع
-- التقييم: 4.3 نجوم
-`,
-    governorate: 'حلب',
-    city: "حلب",
-    region: "الأعظمية",
-    status: 'بيع',
-    price: '60000',
-    area: '150',
-    roomsNumber: '5',
-    floor: '3',
-    directions: 'شرقي-قبلي',
-    contact_info: '+963940401875',
-    date: '08/01/2025',
-    is_sub: true
-    , sub_type: 'حصري',
-    rating: '4.3'
-},
-{
-    id: '3',
-    title: 'محل تجاري في شارع اسكندرون',
-    description: `🌟
-محل تجاري فاخر للبيع في شارع اسكندرون – الجميلية، حلب
-🏢 المساحة: 100 متر مربع من الفخامة التجارية
-🚪 عدد الغرف: 2 غرف بتصميم عملي وأنيق
-📍 الموقع: قلب الجميلية، في منطقة تجارية نشطة تُعد الوجهة المثالية للأعمال الناجحة
-🧭 الاتجاه: شرقي، لضوء طبيعي يعزز جاذبية المكان
-💰 السعر: 300,000 دولار – استثمار ذكي بمردود مضمون
-🔋 المرافق: تجهيزات حديثة تلبي احتياجات المشاريع الطموحة
-📞 للتواصل: +963940101235
-📅 تاريخ النشر: 01/03/2025
-💡 لماذا هذا العقار؟
-✔ موقع استراتيجي يجذب العملاء يوميًا
-✔ تصميم مرن يناسب مختلف أنواع المشاريع
-✔ فرصة ذهبية للاستثمار في منطقة تجارية واعدة
-`,
-    governorate: 'حلب',
-    city: "حلب",
-    region: "الجميلية",
-    status: 'بيع',
-    price: '300000',
-    area: '100',
-    roomsNumber: '2',
-    floor: '0',
-    directions: 'شرقي',
-    contact_info: '+963940101235',
-    date: '01/03/2025',
-    is_sub: true
-    , sub_type: 'حصري',
-}
-];
-const SimilarProperties = ({ similar }) => {
 
+const SimilarProperties = async ({ id }) => {
+    const property = await prisma.property.findUnique({
+        where: { id: parseInt(id) },
+        select: { propertyType: true, regionId: true, region: { select: { cityId: true, name: true, city: { select: { governorateId: true, name: true, governorate: { select: { name: true } } } } } } }
+    });
+    const similar = await prisma.property.findMany({
+        where: {
+            id: { not: property.id },
+            propertyType: property.propertyType,
+            OR: [
+                { regionId: property.regionId },
+                { region: { cityId: property.region.cityId } },
+                { region: { city: { governorateId: property.region.city.governorateId } } }
+            ]
+        },
+        select: {
+            id: true,
+            title: true,
+            description: true,
+            purpose: true,
+            state: true,
+            propertyType: true,
+            price: true,
+            area: true,
+            region: { select: { city: { select: { name: true } }, name: true } },
+            subscription: true,
+            createdAt: true
+        }
+    });
     return (<Fragment>
         {similar.length > 0 && <h1 className={classes.h1}>عقارات مشابهة</h1>}
         <div className={classes.container}>
             {similar.map((property) => {
-                return (<Property key={property.id} url={similar.url ? `http://localhost:8000/${similar.url}` : '/assets/pics/propertydumpic/ChatGPT Image Apr 28, 2025, 04_25_50 PM.png'} {...property} />);
+                return (<Property key={property.id}  {...property} />);
             })}
         </div></Fragment>)
 

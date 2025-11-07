@@ -37,6 +37,7 @@ export const updateBasicData = async (id, data) => {
     }
 };
 export const sendImages = async (images, propertyId) => {
+
     const results = await Promise.all(
         images.map(async (image) => {
             try {
@@ -56,6 +57,22 @@ export const sendImages = async (images, propertyId) => {
         })
     );
     return results;
+};
+export const sendImage = async (secure_url, public_id, propertyId) => {
+    try {
+        const res = await prisma.image.create({
+            data: {
+                secure_url,
+                public_id,
+                propertyId: parseInt(propertyId),
+            }
+        });
+        return { ok: true, data: res };
+    }
+    catch (e) {
+        console.log("فشل إضافة إحدى الصور إلى قاعدة البيانات!", e);
+        return { ok: false, error: e };
+    }
 };
 export const sendVideo = async (video_url, video_public_id, propertyId) => {
     try {

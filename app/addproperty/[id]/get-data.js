@@ -13,7 +13,7 @@ import {
     getRegionByRegionId,
     getAllAmenities,
 } from "@/data/property/constant-data";
-import { getImagePublicIdBySecureUrl, getPropertyAmenities, getPropertyDetails, getPropertyImages, getVideoPublicId } from "@/data/property/property-details";
+import { getImagePublicIdBySecureUrl, getPropertyAmenities, getPropertyDetails, getPropertyFirstImage, getPropertyImages, getVideoPublicId } from "@/data/property/property-details";
 import { getVideoSecureUrl } from "@/data/property/property-details";
 import { fetchSavedPropertiesByUserId } from "@/data/property/saved-properties";
 export const getFullDetails = async (id) => {
@@ -62,6 +62,11 @@ export const getImagesSecureUrl = async (id) => {
     console.log("IAM IN SERVER TRYING TO FETCH IMAGES SECURE_URL!!!");
     const images = await getPropertyImages(id);
     return images;
+}
+export const getFirstImageSecureUrl = async (id) => {
+    console.log("IAM IN SERVER TRYING TO FETCH IMAGE SECURE_URL!!!");
+    const image = await getPropertyFirstImage(id);
+    return image;
 }
 export const getIdBySecureUrl = async (secure_url) => {
     console.log("IAM IN SERVER TRYING TO FETCH PUBLIC_ID!!!");

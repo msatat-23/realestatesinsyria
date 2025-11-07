@@ -1,7 +1,7 @@
 .container {
   width: calc(100% - 192px);
   color: #252525;
-  margin: 0 auto 50px auto;
+  margin: 40px auto 50px auto;
 }
 .container h1 {
   font-size: 18px;

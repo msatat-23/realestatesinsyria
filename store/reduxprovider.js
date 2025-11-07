@@ -5,8 +5,7 @@ import store from './index';
 import { useEffect } from "react";
 
 export function ReduxProvider({ children, session }) {
-
-
+    
     const SessionUpdater = () => {
         const dispatch = useDispatch();
         useEffect(() => {

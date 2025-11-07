@@ -1,6 +1,6 @@
 "use server"
 
-import { sendBasicData, sendImages, sendVideo, setAmenities, setPropertyCompleted, updateBasicData } from "@/data/property/add-property";
+import { sendBasicData, sendImage, sendImages, sendVideo, setAmenities, setPropertyCompleted, updateBasicData } from "@/data/property/add-property";
 
 
 export const submitBasicPropertyData = async (data) => {
@@ -16,6 +16,11 @@ export const updateBasicPropertyData = async (id, data) => {
 export const sendImagesToDB = async (images, propertyId) => {
     console.log("I AM IN SERVER SENDING IMAGES TO DB!!");
     const res = await sendImages(images, propertyId);
+    return res;
+};
+export const sendImageToDB = async (secure_url, public_id, propertyId) => {
+    console.log("I AM IN SERVER SENDING IMAGE TO DB!!");
+    const res = await sendImage(secure_url, public_id, propertyId);
     return res;
 };
 export const sendVideoToDB = async (video_url, video_public_id, propretyId) => {

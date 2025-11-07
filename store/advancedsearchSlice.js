@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+    q:'',
     min_price: '',
     max_price: '',
     governorate: '',

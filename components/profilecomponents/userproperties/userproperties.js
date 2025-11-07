@@ -73,7 +73,7 @@ const UserProperties = () => {
     }
     return (<div className={classes.userproperties}>
         {userproperties.map(property => <div key={property.id} className={classes.container}>
-            <Property key={property.id} {...property} url={`${property.first_image}`} />
+            <Property key={property.id} {...property} />
             <div className={classes.btns}>
                 <button className={classes.btn} onClick={() => { router.push(`/addproperty/${property.id}`) }}>تعديل العقار</button>
                 <button className={classes.btn} onClick={() => { setShowConfirmDelete(true); setid(property.id); }}>حذف العقار</button>

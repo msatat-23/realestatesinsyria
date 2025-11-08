@@ -1,7 +1,7 @@
 import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
-import { resetinfo } from '@/store/yourSlice';
+import { resetinfo } from '@/store/userSlice';
 import { useState } from 'react';
 
 const useLogout = () => {

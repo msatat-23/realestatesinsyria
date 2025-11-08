@@ -95,7 +95,7 @@ const AccountSettings = ({ onLogout }) => {
                 dispatch(setActive('logout'));
             }
             setLoading(false);
-            router.replace('https://realestatesinsyria-msatat.netlify.app/');
+            router.replace('/');
         } catch {
             console.log('خطأ في حذف حساب المستخدم');
             setLoading(false);
@@ -105,15 +105,25 @@ const AccountSettings = ({ onLogout }) => {
     const handleLogout = async () => {
         try {
             setLoading(true);
-            await signOut({ redirect: false });
+
+            // مسح session يدويًا من localStorage/cookies
+            document.cookie = 'next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            localStorage.removeItem('token');
+
+            // استخدام signOut الافتراضي مع redirect
+            const result = await signOut({
+                redirect: true,
+                callbackUrl: '/login' // ← تحديد صفحة إعادة التوجيه
+            });
+
             dispatch(resetinfo());
-            router.replace('/login');
+            router.refresh(); // تحديث الـ cache بعد logout
             return { ok: true, message: "تم تسجيل الخروج بنجاح!" };
+
         } catch (e) {
-            console.log("فشل", e);
-            return { ok: false, message: "فشل تسجيل الخروج" };
-        }
-        finally {
+            console.error("فشل تسجيل الخروج:", e);
+            return { ok: false, message: e.message || "فشل تسجيل الخروج" };
+        } finally {
             setLoading(false);
         }
     };

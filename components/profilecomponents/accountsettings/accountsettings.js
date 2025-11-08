@@ -95,7 +95,7 @@ const AccountSettings = ({ onLogout }) => {
                 dispatch(setActive('logout'));
             }
             setLoading(false);
-            router.replace('/');
+            router.replace('https://realestatesinsyria-msatat.netlify.app/');
         } catch {
             console.log('خطأ في حذف حساب المستخدم');
             setLoading(false);
@@ -116,19 +116,6 @@ const AccountSettings = ({ onLogout }) => {
         finally {
             setLoading(false);
         }
-        // try {
-
-        //     const res = await Logout();
-        //     if (res.ok) {
-        //         console.log("تم تسجيل الخروج");
-        //         dispatch(resetinfo());
-        //     }
-        // } catch (e) {
-        //     console.log("HUGE FAILURE!!");
-        // }
-        // finally {
-        //     setLoading(false);
-        // }
     };
     useEffect(() => {
         const fetchprivacysettings = async () => {

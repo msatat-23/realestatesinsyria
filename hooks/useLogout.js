@@ -1,9 +1,7 @@
-import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { resetinfo } from '@/store/userSlice';
 import { useState } from 'react';
-import { signOut } from '@/auth';
 import { Logout } from '@/serverrequests/logout';
 const useLogout = () => {
     const router = useRouter();

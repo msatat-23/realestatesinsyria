@@ -11,6 +11,7 @@ import { passwordValidation } from '@/lib/validation/uservalidators';
 import { fetchprivacy } from '@/app/profile/get-user-data';
 import { Logout } from '@/serverrequests/logout';
 import { signOut } from 'next-auth/react';
+import useLogout from '@/hooks/useLogout';
 const AccountSettings = ({ onLogout }) => {
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
     const [currentPassword, setCurrentPassword] = useState("");
@@ -20,11 +21,13 @@ const AccountSettings = ({ onLogout }) => {
     const [passwordError, setPasswordError] = useState(false);
     const [showpassword, setShowPassword] = useState(false);
     const [Loading, setLoading] = useState(false);
+
     const [privacy, setPrivacy] = useState({
         hidePhone: false,
         hideEmail: false,
         hideFirstAndLast: false
     });
+    const { handleLogout, loading } = useLogout();
     const userid = useSelector(state => state.user.id);
     const notifystate = useSelector(state => state.notify);
     const dispatch = useDispatch();
@@ -102,38 +105,7 @@ const AccountSettings = ({ onLogout }) => {
         }
     };
 
-    const handleLogout = async () => {
-        try {
-            setLoading(true);
 
-            // 1. أولاً: مسح بيانات المستخدم من Redux
-            dispatch(resetinfo());
-
-            // 2. ثانياً: استخدام signOut مع تحديد callbackUrl
-            const result = await signOut({
-                redirect: false,
-                callbackUrl: '/login'
-            });
-
-            // 3. التحقق من نتيجة العملية
-            if (result?.error) {
-                throw new Error(result.error);
-            }
-
-            // 4. التأكد من إعادة التوجيه حتى لو لم تعمل signOut بشكل صحيح
-            router.refresh(); // تحديث حالة الجلسة
-            router.replace('/login');
-
-            return { ok: true, message: "تم تسجيل الخروج بنجاح!" };
-        } catch (e) {
-            console.error("فشل تسجيل الخروج:", e);
-            // محاولة إعادة التوجيه حتى في حالة الخطأ
-            router.replace('/login');
-            return { ok: false, message: "فشل تسجيل الخروج" };
-        } finally {
-            setLoading(false);
-        }
-    };
     useEffect(() => {
         const fetchprivacysettings = async () => {
             try {

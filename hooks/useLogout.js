@@ -3,7 +3,8 @@ import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { resetinfo } from '@/store/userSlice';
 import { useState } from 'react';
-
+import { signOut } from '@/auth';
+import { Logout } from '@/serverrequests/logout';
 const useLogout = () => {
     const router = useRouter();
     const dispatch = useDispatch();
@@ -12,8 +13,8 @@ const useLogout = () => {
     const handleLogout = async () => {
         try {
             setLoading(true);
-            await signOut({ callbackUrl: '/login' });
-
+            const res = await Logout();
+            console.log(res);
             dispatch(resetinfo());
 
             return { ok: true, message: "تم تسجيل الخروج بنجاح!" };

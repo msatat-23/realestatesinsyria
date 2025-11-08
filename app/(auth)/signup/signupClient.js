@@ -223,7 +223,7 @@ const SignUpClient = () => {
                 disabled={state.loading}
             >إنشاء الحساب</button>
         </form>
-        <SocialButtons onClick={socialLogingHandler} />
+        {/* <SocialButtons onClick={socialLogingHandler} /> */}
 
         {state.loading && (
             <Loading />

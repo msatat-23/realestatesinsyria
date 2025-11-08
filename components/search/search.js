@@ -6,15 +6,21 @@ import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { updateField } from '@/store/advancedsearchSlice';
+import Loading from '../loading/loading';
+import { usePathname } from 'next/navigation';
 const Search = () => {
     const [selected, setselected] = useState('بيع');
     const [searchText, setsearchText] = useState('');
+    const [loading, setloading] = useState(false);
     const router = useRouter();
+    const path = usePathname();
     const dispatch = useDispatch();
     const reduxfilters = useSelector(state => state.advancedsearch);
     const SubmissionHandler = (e) => {
         e.preventDefault();
         router.push(`/search?q=${reduxfilters.q}&purpose=${reduxfilters.purpose}&minprice=${reduxfilters.min_price}&maxprice=${reduxfilters.max_price}&governorate=${reduxfilters.governorate.label}&city=${reduxfilters.city.label}&region=${reduxfilters.region.label}&type=${reduxfilters.property_type}&minarea=${reduxfilters.min_area}&maxarea=${reduxfilters.max_area}&minrooms=${reduxfilters.minroomsNum}&maxrooms=${reduxfilters.maxroomsNum}`);
+        if (path === '/')
+            setloading(true);
     };
     return (
         <div className={classes.search}>
@@ -41,6 +47,9 @@ const Search = () => {
                     <button type='submit'><img className={classes.img} src='/assets/icons/searchicon/search.png' alt='searchicon' /></button>
                 </form>
             </div>
+            {
+                loading && <Loading />
+            }
         </div>
     )
 }

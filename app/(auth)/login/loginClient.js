@@ -161,7 +161,7 @@ const LogInClient = () => {
                 disabled={state.loading}
             >تسجيل الدخول</button>
         </form>
-        {!state.showcode && < SocialButtons onClick={socialLogingHandler} />}
+        {/* {!state.showcode && < SocialButtons onClick={socialLogingHandler} />} */}
         {state.loading && (
             <Loading />
         )}

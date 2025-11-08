@@ -9,8 +9,6 @@ import Confirm from '@/components/confirmcomponent/confirm';
 import { updatePassword, updatePrivacy } from '@/app/profile/update-user';
 import { passwordValidation } from '@/lib/validation/uservalidators';
 import { fetchprivacy } from '@/app/profile/get-user-data';
-import { Logout } from '@/serverrequests/logout';
-import { signOut } from 'next-auth/react';
 import useLogout from '@/hooks/useLogout';
 const AccountSettings = ({ onLogout }) => {
     const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -125,6 +123,13 @@ const AccountSettings = ({ onLogout }) => {
         }
         fetchprivacysettings();
     }, []);
+    const onClickLogout = async () => {
+        try {
+            await handleLogout();
+        } catch (e) {
+            console.log("خطأ أثناء تسجيل الخروج:", e);
+        }
+    };
 
     return (
         <div className={classes.settingscontainer}>
@@ -223,7 +228,7 @@ const AccountSettings = ({ onLogout }) => {
             <div className={classes.settingsection}>
                 <h3>تسجيل الخروج</h3>
                 <p className={classes.logouttext}>انقر على الزر أدناه لتسجيل الخروج من حسابك.</p>
-                <button className={classes.logoutbutton} onClick={handleLogout}>تسجيل الخروج</button>
+                <button className={classes.logoutbutton} onClick={onClickLogout}>تسجيل الخروج</button>
             </div>
 
 

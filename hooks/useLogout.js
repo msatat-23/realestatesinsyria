@@ -1,9 +1,10 @@
-import { useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
-import { resetinfo } from '@/store/userSlice';
-import { useState } from 'react';
-import { Logout } from '@/serverrequests/logout';
-const useLogout = () => {
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { resetinfo } from "@/store/userSlice";
+import { useState } from "react";
+
+export default function useLogout() {
     const router = useRouter();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
@@ -11,21 +12,22 @@ const useLogout = () => {
     const handleLogout = async () => {
         try {
             setLoading(true);
-            const res = await Logout();
-            console.log(res);
+
+            await signOut({ redirect: false });
+
             dispatch(resetinfo());
 
-            return { ok: true, message: "تم تسجيل الخروج بنجاح!" };
-        } catch (error) {
-            console.error("فشل تسجيل الخروج:", error);
-            router.replace('/login');
+            router.replace("/login");
 
+            return { ok: true, message: "تم تسجيل الخروج بنجاح!" };
+        } catch (err) {
+            console.error("فشل تسجيل الخروج:", err);
+            router.replace("/login");
             return { ok: false, message: "فشل تسجيل الخروج" };
         } finally {
             setLoading(false);
         }
     };
-    return { handleLogout, loading };
-};
 
-export default useLogout;
+    return { handleLogout, loading };
+}

@@ -85,7 +85,7 @@ const SearchPage = async ({ searchParams }) => {
             return [key, value]
         })
     );
-    const { q, purpose, minprice, maxprice, governorate, city, region, type, minarea, maxarea, minrooms, maxrooms } = params;
+    const { q, purpose, minprice, maxprice, governorate, city, region, type, minarea, maxarea, minrooms, maxrooms, selected } = params;
     console.log(params);
     const words = q ? q.split(' ').filter(item => !ignoredWords.includes(item)) : [];
     console.log(words);
@@ -182,7 +182,7 @@ const SearchPage = async ({ searchParams }) => {
     return <div>
         <Navbar mainpage={false} />
         <Search />
-        <SearchFilter />
+        <SearchFilter selected={selected} />
         <div className="flex justify-center gap-x-12 gap-y-12 w-[100%] my-12 flex-wrap">
             {properties.map(property => <Property key={property.id}{...property} />)}
         </div>

@@ -18,7 +18,10 @@ const Search = () => {
     const reduxfilters = useSelector(state => state.advancedsearch);
     const SubmissionHandler = (e) => {
         e.preventDefault();
-        router.push(`/search?q=${reduxfilters.q}&purpose=${reduxfilters.purpose}&minprice=${reduxfilters.min_price}&maxprice=${reduxfilters.max_price}&governorate=${reduxfilters.governorate.label}&city=${reduxfilters.city.label}&region=${reduxfilters.region.label}&type=${reduxfilters.property_type}&minarea=${reduxfilters.min_area}&maxarea=${reduxfilters.max_area}&minrooms=${reduxfilters.minroomsNum}&maxrooms=${reduxfilters.maxroomsNum}`);
+        if (!reduxfilters.property_status) {
+            dispatch(updateField({ field: 'property_status', value: "بيع" }));
+        }
+        router.push(`/search?q=${reduxfilters.q}&purpose=${reduxfilters.purpose}&minprice=${reduxfilters.min_price}&maxprice=${reduxfilters.max_price}&governorate=${reduxfilters.governorate.label}&city=${reduxfilters.city.label}&region=${reduxfilters.region.label}&type=${reduxfilters.property_type}&minarea=${reduxfilters.min_area}&maxarea=${reduxfilters.max_area}&minrooms=${reduxfilters.minroomsNum}&maxrooms=${reduxfilters.maxroomsNum}&selected=${selected}`);
         if (path === '/')
             setloading(true);
     };

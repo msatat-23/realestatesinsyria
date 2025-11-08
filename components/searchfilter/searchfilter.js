@@ -46,7 +46,7 @@ const customorderStyles = {
     }),
 };
 
-const SearchFilter = () => {
+const SearchFilter = ({ selected }) => {
     const [Governorates, setGovernorates] = useState([]);
     const [allCities, setallCities] = useState([]);
     const [Cities, setCities] = useState([]);
@@ -72,10 +72,11 @@ const SearchFilter = () => {
         { value: 'dateasc', label: 'التاريخ من الأقدم إلى الأحدث' },
         { value: 'datedesc', label: 'التاريخ من الأحدث إلى الأقدم' },
     ];
-
+    console.log("SELECTED : ", selected);
+    console.log("property_status : ", reduxfilters.property_status);
     const Empty = () => {
         const { q, property_status, ...rest } = reduxfilters;
-        return Object.values(rest).every(value => value === '');
+        return Object.values(rest).every(value => value === '') && (reduxfilters.property_status === selected);
     };
     const fitlercontainer = () => {
         switch (SelectedFilter) {

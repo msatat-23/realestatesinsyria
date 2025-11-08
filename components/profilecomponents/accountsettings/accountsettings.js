@@ -106,23 +106,30 @@ const AccountSettings = ({ onLogout }) => {
         try {
             setLoading(true);
 
-            // مسح session يدويًا من localStorage/cookies
-            document.cookie = 'next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            localStorage.removeItem('token');
+            // 1. أولاً: مسح بيانات المستخدم من Redux
+            dispatch(resetinfo());
 
-            // استخدام signOut الافتراضي مع redirect
+            // 2. ثانياً: استخدام signOut مع تحديد callbackUrl
             const result = await signOut({
-                redirect: true,
-                callbackUrl: '/login' // ← تحديد صفحة إعادة التوجيه
+                redirect: false,
+                callbackUrl: '/login'
             });
 
-            dispatch(resetinfo());
-            router.refresh(); // تحديث الـ cache بعد logout
-            return { ok: true, message: "تم تسجيل الخروج بنجاح!" };
+            // 3. التحقق من نتيجة العملية
+            if (result?.error) {
+                throw new Error(result.error);
+            }
 
+            // 4. التأكد من إعادة التوجيه حتى لو لم تعمل signOut بشكل صحيح
+            router.refresh(); // تحديث حالة الجلسة
+            router.replace('/login');
+
+            return { ok: true, message: "تم تسجيل الخروج بنجاح!" };
         } catch (e) {
             console.error("فشل تسجيل الخروج:", e);
-            return { ok: false, message: e.message || "فشل تسجيل الخروج" };
+            // محاولة إعادة التوجيه حتى في حالة الخطأ
+            router.replace('/login');
+            return { ok: false, message: "فشل تسجيل الخروج" };
         } finally {
             setLoading(false);
         }

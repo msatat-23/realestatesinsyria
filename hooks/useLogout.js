@@ -13,7 +13,7 @@ export default function useLogout() {
         try {
             setLoading(true);
 
-            await signOut({ redirect: false });
+            await signOut({ redirect: true, callbackUrl: '/' });
 
             dispatch(resetinfo());
 

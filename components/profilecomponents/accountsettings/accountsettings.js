@@ -250,7 +250,7 @@ const AccountSettings = ({ onLogout }) => {
                     </div>
                 </div>
             )}
-            {Loading && (
+            {Loading || loading && (
                 <div className={classes.overlay}>
                     <div className={classes.spinner}></div>
                     <p>جار التحميل...</p>

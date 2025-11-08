@@ -41,3 +41,8 @@ yarn-error.log*
 next-env.d.ts
 
 /lib/generated/prisma
+# ✅ السماح برفع محركات Prisma الضرورية لـ Netlify (Debian)
+!node_modules/.prisma/client/libquery_engine-debian-openssl-3.0.x.so.node
+!node_modules/.prisma/client/libquery_engine-rhel-openssl-3.0.x.so.node
+!node_modules/.prisma/client/index.js
+!node_modules/.prisma/client/schema.prisma

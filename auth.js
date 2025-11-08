@@ -5,18 +5,18 @@ import prisma from "./lib/prisma";
 import authConfig from "./auth.config";
 import { getTwoFactorConfirmationByUserId } from "./data/user/twofactor-confirmation";
 export const { handlers, signIn, signOut, auth } = NextAuth({
-    // cookies: {
-    //     sessionToken: {
-    //         name: "next-auth.session-token",
-    //         options: {
-    //             httpOnly: true,
-    //             secure: process.env.NODE_ENV === "production",
-    //             sameSite: "lax",
-    //             path: "/",
-    //         },
-    //     }
-    // }
-    // ,
+    cookies: {
+        sessionToken: {
+            name: "next-auth.session-token",
+            options: {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                path: "/",
+            },
+        }
+    }
+    ,
     trustHost: true,
     callbacks: {
         async jwt({ token, user }) {

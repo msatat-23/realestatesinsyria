@@ -35,7 +35,7 @@ const Navbar = ({ mainpage }) => {
             {ShowAdvancedSearch && <AdvancedSearch hide={() => setShowAdvancedSearch(false)} />}
             <div className={classes.profileandnot}>
                 <Signupbutton />
-                {<img src='/assets/icons/notifications/notification.png' className={classes.noticon} onClick={() => { setshownotifications(prev => !prev) }} />}
+                {user.id && <img src='/assets/icons/notifications/notification.png' className={classes.noticon} onClick={() => { setshownotifications(prev => !prev) }} />}
             </div>
             {shownotifications && <NotificationSidebar close={() => { setshownotifications(false) }} />}
             <img onClick={clickhandler} className={classes.listBtn} src='/assets/icons/menu/hamburger.png' />
